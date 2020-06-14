@@ -10,6 +10,8 @@ from array import array
 from time import sleep
 from gtts import gTTS
 from playsound import playsound
+import Annoying_Program_Cleanup as APC
+
 
 #setup stuff for PyAudio
 CHUNK = 1028
@@ -47,10 +49,16 @@ while True:
         vol = max(data_chunk) # read the volume of the microphone audio
         
         if vol >= MIN_VOLUME: # if the audio is higher than the threshhold, play a random phrase
-            response_choice = random_responses[random.randint(0,16)]
+            response_choice = random_responses[random.randint(0,18)]
             myobj = gTTS(text=response_choice,lang=language,slow=False)
-            myobj.save(f'speech' + str(count) + '.mp3')
-            playsound(myobj) #f'speech' + str(count) + '.mp3'
+            
+            try:
+                myobj.save(f'speech' + str(count) + '.mp3')
+            except PermissionError:
+                count +=1
+                myobj.save(f'speech' + str(count) + '.mp3')
+                
+            playsound(f'speech' + str(count) + '.mp3')
             count += 1
             print(response_choice)
             sleep(3)
@@ -63,3 +71,5 @@ while True:
         break
         
           
+APC.cleanupNow(0)
+
